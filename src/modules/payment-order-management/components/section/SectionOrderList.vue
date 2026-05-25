@@ -4,11 +4,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { useListOrders } from '@/modules/payment-order-management/api/composables/use-list-orders.js'
 import { useOrdersStore } from '@/modules/payment-order-management/stores/store-orders.js'
 import { storeToRefs } from 'pinia'
-import { formatAmount, formatDate } from '@/modules/_core/utils/format.js'
 import BCard from '@/modules/_core/components/b/card/b-card.vue'
 import DCardHeader from '@/modules/_core/components/d/card/d-card-header.vue'
-import CBadgeStatus from '@/modules/_core/components/c/badge/c-badge-status.vue'
-import CardOrderMobile from '@/modules/payment-order-management/components/card/CardOrderMobile.vue'
+import TableOrderList from '@/modules/payment-order-management/components/table/TableOrderList.vue'
 
 const emit = defineEmits(['on-view-order', 'on-create-order'])
 
@@ -31,22 +29,13 @@ const statusOptions = [
   { label: 'Rechazado', value: 'rejected' },
 ]
 
-const columns = [
-  { accessorKey: 'provider', header: 'Proveedor' },
-  { accessorKey: 'amount', header: 'Monto' },
-  { accessorKey: 'currency', header: 'Moneda' },
-  { accessorKey: 'status', header: 'Estado' },
-  { accessorKey: 'createdAt', header: 'Fecha' },
-  { id: 'actions' },
-]
-
 const rows = computed(() => data.value?.data ?? [])
 const total = computed(() => data.value?.total ?? 0)
 const currentPage = computed(() => pagination.value.page)
 const perPage = computed(() => pagination.value.perPage)
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / perPage.value)))
 
-// ── Sincronización URL ↔ Store ──────────────────────────────────────
+// ── Sincronizacion URL ↔ Store ──────────────────────────────────────
 
 onMounted(() => {
   const q = route.query
@@ -93,7 +82,7 @@ watch(() => filters.value.status, (val) => {
   <div>
     <DCardHeader
       title="Órdenes de pago"
-      subtitle="Gestioná las órdenes de pago del sistema"
+      subtitle="Gestiona las órdenes de pago del sistema"
     >
       <template #actions>
         <UButton label="Nueva orden" icon="i-lucide-plus" @click="$emit('on-create-order')" />
@@ -122,109 +111,20 @@ watch(() => filters.value.status, (val) => {
         </div>
       </template>
 
-      <div v-auto-animate>
-        <template v-if="isLoading">
-          <div class="space-y-3 p-4">
-            <USkeleton v-for="n in 5" :key="n" class="h-10 w-full" />
-          </div>
-        </template>
-
-        <UAlert
-          v-else-if="isError"
-          color="error"
-          variant="soft"
-          icon="i-lucide-alert-circle"
-          title="Error al cargar las órdenes"
-          :description="error?.message"
-        >
-          <template #actions>
-            <UButton label="Reintentar" color="error" variant="outline" size="sm" @click="refetch" />
-          </template>
-        </UAlert>
-
-        <UEmpty
-          v-else-if="rows.length === 0"
-          icon="i-lucide-inbox"
-          title="Sin órdenes"
-          description="No se encontraron órdenes de pago con los filtros actuales."
-        >
-          <template #actions>
-            <UButton label="Crear primera orden" icon="i-lucide-plus" @click="$emit('on-create-order')" />
-          </template>
-        </UEmpty>
-
-        <div v-else>
-          <div class="hidden lg:block">
-            <UTable
-              :data="rows"
-              :columns="columns"
-              :ui="{ tr: 'animate-[fadeIn_0.25s_ease-out]' }"
-            >
-              <template #amount-cell="{ row }">
-                <span class="font-medium text-highlighted">
-                  {{ formatAmount(row.original.amount, row.original.currency) }}
-                </span>
-              </template>
-
-              <template #currency-cell="{ row }">
-                <UBadge :label="row.original.currency" color="neutral" variant="subtle" size="sm" />
-              </template>
-
-              <template #status-cell="{ row }">
-                <CBadgeStatus :status="row.original.status" size="sm" />
-              </template>
-
-              <template #createdAt-cell="{ row }">
-                <span class="text-xs text-muted">{{ formatDate(row.original.createdAt) }}</span>
-              </template>
-
-              <template #actions-cell="{ row }">
-                <UButton
-                  icon="i-lucide-eye"
-                  color="neutral"
-                  variant="ghost"
-                  size="sm"
-                  @click="$emit('on-view-order', row.original.id)"
-                />
-              </template>
-            </UTable>
-          </div>
-
-          <div class="block lg:hidden">
-            <div v-auto-animate class="grid gap-3 sm:grid-cols-2">
-              <CardOrderMobile
-                v-for="order in rows"
-                :key="order.id"
-                :order="order"
-                @on-click="$emit('on-view-order', $event)"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <template #footer>
-        <div class="flex items-center justify-between">
-          <p class="text-xs text-muted">
-            {{ total }} orden{{ total !== 1 ? 'es' : '' }}
-            &middot; Página {{ currentPage }} de {{ totalPages }}
-          </p>
-          <UPagination
-            v-if="totalPages > 0"
-            :page="currentPage"
-            :total="total"
-            :items-per-page="perPage"
-            @update:page="handlePageChange"
-          />
-        </div>
-      </template>
+      <TableOrderList
+        :rows="rows"
+        :total="total"
+        :current-page="currentPage"
+        :per-page="perPage"
+        :total-pages="totalPages"
+        :is-loading="isLoading"
+        :is-error="isError"
+        :error="error"
+        @on-view-order="$emit('on-view-order', $event)"
+        @on-create-order="$emit('on-create-order')"
+        @on-refetch="refetch"
+        @update:page="handlePageChange"
+      />
     </BCard>
   </div>
 </template>
-
-<style>
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-</style>
