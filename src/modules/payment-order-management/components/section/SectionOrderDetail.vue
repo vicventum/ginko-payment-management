@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useOrderDetail } from '@/modules/payment-order-management/api/composables/use-order-detail.js'
-import { ORDER_TRANSITIONS } from '@/modules/payment-order-management/domain/state-machine.js'
+import { ORDER_TRANSITIONS } from '@/modules/payment-order-management/constants/index.js'
 import { formatAmount, formatDate } from '@/modules/_core/utils/format.js'
 import { transitionLabel, transitionColor, transitionIcon } from '@/modules/payment-order-management/utils/order.js'
 import BCard from '@/modules/_core/components/b/card/b-card.vue'

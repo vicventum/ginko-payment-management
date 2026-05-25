@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { ORDER_TRANSITIONS } from '@/modules/payment-order-management/domain/state-machine.js'
+import { ORDER_TRANSITIONS } from '@/modules/payment-order-management/constants/index.js'
 import { ORDER_STATUSES } from '@/modules/payment-order-management/constants/index.js'
 import { useToast } from '@/modules/_core/utils/toast.js'
 import { useUpdateOrder } from '@/modules/payment-order-management/api/composables/use-update-order.js'

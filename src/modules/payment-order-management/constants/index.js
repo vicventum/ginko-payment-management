@@ -1,3 +1,10 @@
+export const ORDER_TRANSITIONS = {
+  draft: ['approved', 'rejected'],
+  approved: ['paid'],
+  paid: [],
+  rejected: [],
+}
+
 export const ORDER_STATUSES = {
   DRAFT: 'draft',
   APPROVED: 'approved',

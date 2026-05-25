@@ -1,5 +1,5 @@
 export { ORDER_STATUSES } from '@/modules/payment-order-management/constants/index.js'
-export { ORDER_TRANSITIONS } from '@/modules/payment-order-management/domain/state-machine.js'
+export { ORDER_TRANSITIONS } from '@/modules/payment-order-management/constants/index.js'
 
 export {
   fetchOrders,
