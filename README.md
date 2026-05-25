@@ -261,7 +261,6 @@ src/modules/
     ├── api/composables/         # Hooks del módulo
     ├── components/{section,form,fields,table,card}/
     ├── constants/               # Estados, transiciones
-    ├── domain/                  # Máquina de estados
     ├── pages/                   # Vistas del módulo
     ├── router/                  # Rutas del módulo
     ├── schemas/                 # Validación Zod

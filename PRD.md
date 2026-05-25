@@ -127,7 +127,7 @@ Basado en la prioridad y el tiempo limitado, se decidió entregar los siguientes
 - **Bloque 2**: Filtros por estado y búsqueda por proveedor, combinados en AND, con sincronización a query params de la URL.
 - **Bloque 3**: Formulario de creación con validaciones en tiempo real, mensajes de error por campo, botón de envío deshabilitado cuando inválido o en envío, redirección tras creación exitosa.
 - **Bloque 4**: Vista de detalle de orden, transiciones de estado permitidas (BORRADOR→APROBADA, BORRADOR→RECHAZADA, APROBADA→PAGADA), confirmación antes de transicionar, manejo de errores de API.
-- **Bloque 5**: Componentes pequeños y con responsabilidad clara, uso consciente de estado local (formulario UI temporal) frente a Pinia (filtros, paginación, selección), diseño responsivo en tres breakpoints (mobile <640px, tablet 640-1023px, desktop ≥1024px), pruebas unitarias sobre la máquina de estados y pruebas de integración sobre el formulario de creación.
+- **Bloque 5**: Componentes pequeños y con responsabilidad clara, uso consciente de estado local (formulario UI temporal) frente a Pinia (filtros, paginación, selección), diseño responsivo en tres breakpoints (mobile <640px, tablet 640-1023px, desktop ≥1024px), pruebas unitarias y pruebas de integración sobre el formulario de creación.
 
 ## Decisiones de diseño y arquitectura
 - **Arquitectura basada en módulos**: Cada dominio es un módulo bajo `src/modules/`. El módulo de gestión de órdenes de pago está en `src/modules/payment-order-management/`.
@@ -143,7 +143,6 @@ Basado en la prioridad y el tiempo limitado, se decidió entregar los siguientes
 - **Responsividad**: Diseño con Tailwind 4 y Nuxt UI v4, doble render en `SectionOrderList.vue` (tabla ≥lg, grid de tarjetas <lg). Tres breakpoints: mobile (<640px), tablet (640-1023px), desktop (≥1024px).
 - **Estilos**: Tailwind 4 para layout y responsividad, Nuxt UI v4 para componentes preconstruidos (tabla, tarjeta, botón, input, modal, esqueleto, etc.). Modo oscuro mediante `UColorModeSwitch`.
 - **Pruebas**: 
-  - Unidad: máquina de estados (transiciones válidas/invalidas, estados terminales).
   - Integración: formulario de creación (13 tests: reglas de validación Zod, comportamiento de envío, emisión de eventos, manejo de errores de API).
   - Infraestructura: `package.json`, `vitest.config.js` para ejecutar pruebas con `vitest`.
 
