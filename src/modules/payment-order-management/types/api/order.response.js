@@ -5,7 +5,7 @@
  * @property {number} amount
  * @property {string} currency
  * @property {string} concept
- * @property {import('./state-machine.response.js').OrderStatus} status
+ * @property {OrderStatus} status
  * @property {string} createdAt
  */
 

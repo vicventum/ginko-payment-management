@@ -1,5 +1,5 @@
 export { ORDER_STATUSES } from '@/modules/payment-order-management/types/api/order.response.js'
-export { ORDER_STATE_MACHINE } from '@/modules/payment-order-management/types/api/state-machine.response.js'
+export { ORDER_TRANSITIONS } from '@/modules/payment-order-management/domain/state-machine.js'
 
 export {
   fetchOrders,
@@ -8,11 +8,6 @@ export {
   updateOrder,
   deleteOrder,
 } from '@/modules/payment-order-management/api/services/service-orders.js'
-
-export {
-  transitionOrderState,
-  getAllowedTransitions,
-} from '@/modules/payment-order-management/api/services/service-state-machine.js'
 
 export { useOrdersStore } from '@/modules/payment-order-management/stores/store-orders.js'
 

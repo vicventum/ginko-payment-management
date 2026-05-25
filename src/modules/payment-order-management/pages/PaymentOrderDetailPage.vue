@@ -25,8 +25,9 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { transitionOrderState } from '@/modules/payment-order-management/api/services/service-state-machine.js'
+import { ORDER_TRANSITIONS } from '@/modules/payment-order-management/domain/state-machine.js'
 import { ORDER_STATUSES } from '@/modules/payment-order-management/types/api/order.response.js'
+import { useToast } from '@/modules/_core/utils/toast.js'
 import { useUpdateOrder } from '@/modules/payment-order-management/api/composables/use-update-order.js'
 import SectionOrderDetail from '@/modules/payment-order-management/components/section/SectionOrderDetail.vue'
 import DialogConfirmTransition from '@/modules/payment-order-management/components/dialog/DialogConfirmTransition.vue'
@@ -94,6 +95,8 @@ const afterTransition = () => {
   detailRef.value?.refresh()
 }
 
+const toast = useToast()
+
 const { mutateAsync, isPending: transitioning } = useUpdateOrder({
   onSuccess: (data, variables) => {
     afterTransition()
@@ -107,13 +110,15 @@ const { mutateAsync, isPending: transitioning } = useUpdateOrder({
 
 async function executeTransition() {
   if (!pendingTransition.value) return
+  const { from, to } = pendingTransition.value
+
+  if (!ORDER_TRANSITIONS[from]?.includes(to)) {
+    toast.error(`Transición inválida: "${from}" -> "${to}"`)
+    return
+  }
 
   try {
-    const newStatus = transitionOrderState(
-      pendingTransition.value.from,
-      pendingTransition.value.to,
-    )
-    await mutateAsync({ id: props.id, status: newStatus })
+    await mutateAsync({ id: props.id, status: to })
   } catch {
     // Error toast ya manejado por useMutation
   }

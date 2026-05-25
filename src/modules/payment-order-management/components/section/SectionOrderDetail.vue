@@ -81,7 +81,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useOrderDetail } from '@/modules/payment-order-management/api/composables/use-order-detail.js'
-import { ORDER_STATE_MACHINE } from '@/modules/payment-order-management/types/api/state-machine.response.js'
+import { ORDER_TRANSITIONS } from '@/modules/payment-order-management/domain/state-machine.js'
 
 const props = defineProps({
   orderId: { type: String, required: true },
@@ -95,7 +95,7 @@ defineExpose({ refresh })
 
 const allowedTransitions = computed(() => {
   if (!data.value) return []
-  return ORDER_STATE_MACHINE.getAllowedTransitions(data.value.status)
+  return ORDER_TRANSITIONS[data.value.status] ?? []
 })
 
 function statusColor(status) {
