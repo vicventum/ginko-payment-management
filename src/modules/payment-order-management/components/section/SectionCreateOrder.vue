@@ -1,20 +1,21 @@
 <template>
   <div>
-    <div class="mb-6 flex items-center gap-3">
-      <UButton icon="i-lucide-arrow-left" color="neutral" variant="ghost" @click="$emit('cancel')" />
-      <div>
-        <h2 class="text-lg font-semibold text-highlighted">Nueva orden de pago</h2>
-        <p class="text-sm text-muted">Completá los datos para crear una nueva orden</p>
-      </div>
-    </div>
+    <DCardHeader
+      title="Nueva orden de pago"
+      subtitle="Completá los datos para crear una nueva orden"
+      back
+      @back="$emit('cancel')"
+    />
 
-    <UCard>
+    <BCard>
       <FormCreateOrder @created="onCreated" @cancel="$emit('cancel')" />
-    </UCard>
+    </BCard>
   </div>
 </template>
 
 <script setup>
+import BCard from '@/modules/_core/components/b/card/b-card.vue'
+import DCardHeader from '@/modules/_core/components/d/card/d-card-header.vue'
 import FormCreateOrder from '@/modules/payment-order-management/components/form/FormCreateOrder.vue'
 
 const emit = defineEmits(['created', 'cancel'])

@@ -1,12 +1,11 @@
 <template>
   <div>
-    <div class="mb-6 flex items-center gap-3">
-      <UButton icon="i-lucide-arrow-left" color="neutral" variant="ghost" @click="$emit('back')" />
-      <div>
-        <h2 class="text-lg font-semibold text-highlighted">Detalle de orden</h2>
-        <p v-if="data" class="text-sm text-muted">{{ data.provider }}</p>
-      </div>
-    </div>
+    <DCardHeader
+      title="Detalle de orden"
+      :subtitle="data?.provider"
+      back
+      @back="$emit('back')"
+    />
 
     <template v-if="isLoading">
       <div class="space-y-4">
@@ -26,7 +25,7 @@
       :description="error?.message"
     />
 
-    <UCard v-else-if="data">
+    <BCard v-else-if="data">
       <template #header>
         <div class="flex items-center justify-between gap-4">
           <div class="min-w-0">
@@ -37,9 +36,7 @@
               ID: {{ data.id }} &middot; Creada {{ formatDate(data.createdAt) }}
             </p>
           </div>
-          <UBadge :color="statusColor(data.status)" variant="subtle" size="lg">
-            {{ statusLabel(data.status) }}
-          </UBadge>
+          <CBadgeStatus :status="data.status" size="lg" />
         </div>
       </template>
 
@@ -74,7 +71,7 @@
           />
         </div>
       </template>
-    </UCard>
+    </BCard>
   </div>
 </template>
 
@@ -82,6 +79,11 @@
 import { computed } from 'vue'
 import { useOrderDetail } from '@/modules/payment-order-management/api/composables/use-order-detail.js'
 import { ORDER_TRANSITIONS } from '@/modules/payment-order-management/domain/state-machine.js'
+import { formatAmount, formatDate } from '@/modules/_core/utils/format.js'
+import { transitionLabel, transitionColor, transitionIcon } from '@/modules/payment-order-management/_shared/order-helpers.js'
+import BCard from '@/modules/_core/components/b/card/b-card.vue'
+import DCardHeader from '@/modules/_core/components/d/card/d-card-header.vue'
+import CBadgeStatus from '@/modules/_core/components/c/badge/c-badge-status.vue'
 
 const props = defineProps({
   orderId: { type: String, required: true },
@@ -97,44 +99,4 @@ const allowedTransitions = computed(() => {
   if (!data.value) return []
   return ORDER_TRANSITIONS[data.value.status] ?? []
 })
-
-function statusColor(status) {
-  const map = { draft: 'warning', approved: 'info', paid: 'success', rejected: 'error' }
-  return map[status] || 'neutral'
-}
-
-function statusLabel(status) {
-  const map = { draft: 'Borrador', approved: 'Aprobado', paid: 'Pagado', rejected: 'Rechazado' }
-  return map[status] || status
-}
-
-function transitionLabel(status) {
-  const labels = { approved: 'Aprobar', paid: 'Marcar como pagado', rejected: 'Rechazar' }
-  return labels[status] || status
-}
-
-function transitionColor(status) {
-  const colors = { approved: 'success', paid: 'success', rejected: 'error' }
-  return colors[status] || 'neutral'
-}
-
-function transitionIcon(status) {
-  const icons = { approved: 'i-lucide-check', paid: 'i-lucide-check-circle', rejected: 'i-lucide-x' }
-  return icons[status] || ''
-}
-
-function formatAmount(amount, currency) {
-  if (!currency) {
-    return new Intl.NumberFormat('es-AR').format(amount ?? 0)
-  }
-  try {
-    return new Intl.NumberFormat('es-AR', { style: 'currency', currency }).format(amount ?? 0)
-  } catch {
-    return new Intl.NumberFormat('es-AR').format(amount ?? 0)
-  }
-}
-
-function formatDate(dateStr) {
-  return new Intl.DateTimeFormat('es-AR', { dateStyle: 'medium' }).format(new Date(dateStr))
-}
 </script>

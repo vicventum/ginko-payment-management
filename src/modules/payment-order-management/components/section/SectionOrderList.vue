@@ -1,14 +1,15 @@
 <template>
   <div>
-    <div class="mb-6 flex items-center justify-between">
-      <div>
-        <h2 class="text-lg font-semibold text-highlighted">Órdenes de pago</h2>
-        <p class="text-sm text-muted">Gestioná las órdenes de pago del sistema</p>
-      </div>
-      <UButton label="Nueva orden" icon="i-lucide-plus" @click="$emit('create-order')" />
-    </div>
+    <DCardHeader
+      title="Órdenes de pago"
+      subtitle="Gestioná las órdenes de pago del sistema"
+    >
+      <template #actions>
+        <UButton label="Nueva orden" icon="i-lucide-plus" @click="$emit('create-order')" />
+      </template>
+    </DCardHeader>
 
-    <UCard>
+    <BCard>
       <template #header>
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <UInput
@@ -75,9 +76,7 @@
             </template>
 
             <template #status-cell="{ row }">
-              <UBadge :color="statusColor(row.original.status)" variant="subtle" size="sm">
-                {{ statusLabel(row.original.status) }}
-              </UBadge>
+              <CBadgeStatus :status="row.original.status" size="sm" />
             </template>
 
             <template #createdAt-cell="{ row }">
@@ -123,7 +122,7 @@
           />
         </div>
       </template>
-    </UCard>
+    </BCard>
   </div>
 </template>
 
@@ -133,6 +132,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { useListOrders } from '@/modules/payment-order-management/api/composables/use-list-orders.js'
 import { useOrdersStore } from '@/modules/payment-order-management/stores/store-orders.js'
 import { storeToRefs } from 'pinia'
+import { formatAmount, formatDate } from '@/modules/_core/utils/format.js'
+import BCard from '@/modules/_core/components/b/card/b-card.vue'
+import DCardHeader from '@/modules/_core/components/d/card/d-card-header.vue'
+import CBadgeStatus from '@/modules/_core/components/c/badge/c-badge-status.vue'
 import CardOrderMobile from '@/modules/payment-order-management/components/card/CardOrderMobile.vue'
 
 const emit = defineEmits(['view-order', 'create-order'])
@@ -174,7 +177,6 @@ const totalPages = computed(() => Math.max(1, Math.ceil(total.value / perPage.va
 // ── Sincronización URL ↔ Store ──────────────────────────────────────
 
 onMounted(() => {
-  // URL → Store: al montar, leer query params y aplicar al store
   const q = route.query
   const urlSearch = typeof q.search === 'string' ? q.search : ''
   const urlStatus = typeof q.status === 'string' ? q.status : null
@@ -186,7 +188,6 @@ onMounted(() => {
   }
 })
 
-// Store → URL: cuando cambian los filtros del store, actualizar la URL
 watch(filters, (val) => {
   const query = {}
   if (val.search) query.search = val.search
@@ -214,29 +215,4 @@ watch(() => filters.value.search, (val) => {
 watch(() => filters.value.status, (val) => {
   statusFilter.value = val
 })
-
-function statusColor(status) {
-  const map = { draft: 'warning', approved: 'info', paid: 'success', rejected: 'error' }
-  return map[status] || 'neutral'
-}
-
-function statusLabel(status) {
-  const map = { draft: 'Borrador', approved: 'Aprobado', paid: 'Pagado', rejected: 'Rechazado' }
-  return map[status] || status
-}
-
-function formatAmount(amount, currency) {
-  if (!currency) {
-    return new Intl.NumberFormat('es-AR').format(amount ?? 0)
-  }
-  try {
-    return new Intl.NumberFormat('es-AR', { style: 'currency', currency }).format(amount ?? 0)
-  } catch {
-    return new Intl.NumberFormat('es-AR').format(amount ?? 0)
-  }
-}
-
-function formatDate(dateStr) {
-  return new Intl.DateTimeFormat('es-AR', { dateStyle: 'medium' }).format(new Date(dateStr))
-}
 </script>

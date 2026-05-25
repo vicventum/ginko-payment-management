@@ -17,9 +17,7 @@
       </div>
 
       <div class="flex shrink-0 flex-col items-end gap-2">
-        <UBadge :color="statusColor(order.status)" variant="subtle" size="sm">
-          {{ statusLabel(order.status) }}
-        </UBadge>
+        <CBadgeStatus :status="order.status" size="sm" />
         <span class="text-sm font-semibold text-highlighted">
           {{ formatAmount(order.amount, order.currency) }}
         </span>
@@ -29,6 +27,9 @@
 </template>
 
 <script setup>
+import { formatAmount, formatDate } from '@/modules/_core/utils/format.js'
+import CBadgeStatus from '@/modules/_core/components/c/badge/c-badge-status.vue'
+
 defineProps({
   order: {
     type: Object,
@@ -37,29 +38,4 @@ defineProps({
 })
 
 defineEmits(['click'])
-
-function statusColor(status) {
-  const map = { draft: 'warning', approved: 'info', paid: 'success', rejected: 'error' }
-  return map[status] || 'neutral'
-}
-
-function statusLabel(status) {
-  const map = { draft: 'Borrador', approved: 'Aprobado', paid: 'Pagado', rejected: 'Rechazado' }
-  return map[status] || status
-}
-
-function formatAmount(amount, currency) {
-  if (!currency) {
-    return new Intl.NumberFormat('es-AR').format(amount ?? 0)
-  }
-  try {
-    return new Intl.NumberFormat('es-AR', { style: 'currency', currency }).format(amount ?? 0)
-  } catch {
-    return new Intl.NumberFormat('es-AR').format(amount ?? 0)
-  }
-}
-
-function formatDate(dateStr) {
-  return new Intl.DateTimeFormat('es-AR', { dateStyle: 'medium' }).format(new Date(dateStr))
-}
 </script>

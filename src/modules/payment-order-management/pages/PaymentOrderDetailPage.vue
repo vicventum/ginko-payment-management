@@ -9,10 +9,10 @@
       />
     </section>
 
-    <DialogConfirmTransition
+    <BModal
       :open="confirmOpen"
       :title="confirmTitle"
-      :description="confirmDescription"
+      :text="confirmDescription"
       :confirm-label="confirmLabel"
       :confirm-color="confirmColor"
       :loading="transitioning"
@@ -29,8 +29,9 @@ import { ORDER_TRANSITIONS } from '@/modules/payment-order-management/domain/sta
 import { ORDER_STATUSES } from '@/modules/payment-order-management/types/api/order.response.js'
 import { useToast } from '@/modules/_core/utils/toast.js'
 import { useUpdateOrder } from '@/modules/payment-order-management/api/composables/use-update-order.js'
+import { transitionLabel, transitionColor } from '@/modules/payment-order-management/_shared/order-helpers.js'
+import BModal from '@/modules/_core/components/b/modal/b-modal.vue'
 import SectionOrderDetail from '@/modules/payment-order-management/components/section/SectionOrderDetail.vue'
-import DialogConfirmTransition from '@/modules/payment-order-management/components/dialog/DialogConfirmTransition.vue'
 
 const props = defineProps({
   id: { type: String, required: true },
@@ -42,18 +43,6 @@ const confirmOpen = ref(false)
 
 const pendingTransition = ref(null)
 
-const transitionLabels = {
-  [ORDER_STATUSES.APPROVED]: 'Aprobar',
-  [ORDER_STATUSES.PAID]: 'Marcar como pagado',
-  [ORDER_STATUSES.REJECTED]: 'Rechazar',
-}
-
-const transitionColors = {
-  [ORDER_STATUSES.APPROVED]: 'success',
-  [ORDER_STATUSES.PAID]: 'success',
-  [ORDER_STATUSES.REJECTED]: 'error',
-}
-
 const statusSuccessLabels = {
   [ORDER_STATUSES.APPROVED]: 'aprobada',
   [ORDER_STATUSES.PAID]: 'pagada',
@@ -62,7 +51,7 @@ const statusSuccessLabels = {
 
 const confirmTitle = computed(() => {
   if (!pendingTransition.value) return ''
-  return `¿${transitionLabels[pendingTransition.value.to] || pendingTransition.value.to}?`
+  return `¿${transitionLabel(pendingTransition.value.to)}?`
 })
 
 const confirmDescription = computed(() => {
@@ -72,12 +61,12 @@ const confirmDescription = computed(() => {
 
 const confirmLabel = computed(() => {
   if (!pendingTransition.value) return 'Confirmar'
-  return transitionLabels[pendingTransition.value.to] || 'Confirmar'
+  return transitionLabel(pendingTransition.value.to)
 })
 
 const confirmColor = computed(() => {
   if (!pendingTransition.value) return 'primary'
-  return transitionColors[pendingTransition.value.to] || 'primary'
+  return transitionColor(pendingTransition.value.to)
 })
 
 function onBack() {
