@@ -14,7 +14,7 @@ function handleCreated(payload) {
   <div>
     <DCardHeader
       title="Nueva orden de pago"
-      subtitle="Completá los datos para crear una nueva orden"
+      subtitle="Completa los datos para crear una nueva orden"
       back
       @on-back="$emit('on-cancel')"
     />
