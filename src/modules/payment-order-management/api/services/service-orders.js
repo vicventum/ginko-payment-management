@@ -1,27 +1,26 @@
-import {
-  fetchOrders as providerFetchOrders,
-  fetchOrderById as providerFetchOrderById,
-  createOrder as providerCreateOrder,
-  updateOrder as providerUpdateOrder,
-  deleteOrder as providerDeleteOrder,
-} from '../providers/provider-orders.js'
-
-export async function fetchOrders(options = {}) {
-  return providerFetchOrders(options)
+const fetchOrders = async (provider, options) => {
+  const { signal = null, payload } = options
+  return await provider({ signal, payload })
 }
 
-export async function fetchOrderById(options = {}) {
-  return providerFetchOrderById(options)
+const fetchOrderById = async (provider, options) => {
+  const { signal = null, payload } = options
+  return await provider({ signal, payload })
 }
 
-export async function createOrder(options = {}) {
-  return providerCreateOrder(options)
+const createOrder = async (provider, options) => {
+  const { signal = null, payload } = options
+  return await provider({ signal, payload })
 }
 
-export async function updateOrder(options = {}) {
-  return providerUpdateOrder(options)
+const updateOrder = async (provider, options) => {
+  const { signal = null, payload } = options
+  return await provider({ signal, payload })
 }
 
-export async function deleteOrder(options = {}) {
-  return providerDeleteOrder(options)
+const deleteOrder = async (provider, options) => {
+  const { signal = null, payload } = options
+  return await provider({ signal, payload })
 }
+
+export { fetchOrders, fetchOrderById, createOrder, updateOrder, deleteOrder }

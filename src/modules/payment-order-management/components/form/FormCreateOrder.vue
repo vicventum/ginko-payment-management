@@ -17,12 +17,9 @@
 import * as z from 'zod'
 import { reactive, computed } from 'vue'
 import { useCreateOrder } from '../../api/composables/use-create-order.js'
-import { useToast } from '@/modules/_core/utils/toast.js'
 import FieldsOrderForm from '../fields/FieldsOrderForm.vue'
 
 const emit = defineEmits(['created', 'cancel'])
-
-const toast = useToast()
 
 const schema = z.object({
   provider: z.string().min(1, 'El proveedor es obligatorio'),
@@ -41,7 +38,13 @@ const state = reactive({
   concept: '',
 })
 
-const { execute, isPending, error } = useCreateOrder()
+const { mutateAsync, isPending, error } = useCreateOrder({
+  meta: {
+    showSuccessToast: true,
+    successMessage: (data, variables) => `La orden para "${variables.provider}" fue creada con éxito`,
+    errorMessage: 'No se pudo crear la orden',
+  },
+})
 
 /** @type {import('vue').ComputedRef<boolean>} */
 const isFormInvalid = computed(() => {
@@ -51,21 +54,14 @@ const isFormInvalid = computed(() => {
 
 async function onSubmit(event) {
   try {
-    // ⛔ BUGFIX: pasar event.data directamente, no envuelto en { payload }
-    // antes: execute({ payload: event.data })
-    //   -> execute({ payload: { payload: event.data } }) -> la orden tiene nested payload
-    // ahora: execute(event.data)
-    //   -> execute({ payload: event.data }) -> orden con currency en el top-level
-    await execute(event.data)
-    toast.success('Orden creada', `La orden para "${event.data.provider}" fue creada con éxito`)
+    await mutateAsync(event.data)
+    emit('created', event.data)
+    state.provider = ''
+    state.amount = null
+    state.currency = 'ARS'
+    state.concept = ''
   } catch {
-    toast.error('Error', error?.message || 'No se pudo crear la orden')
-    return
+    // Error toast ya manejado por useMutation
   }
-  emit('created', event.data)
-  state.provider = ''
-  state.amount = null
-  state.currency = 'ARS'
-  state.concept = ''
 }
 </script>

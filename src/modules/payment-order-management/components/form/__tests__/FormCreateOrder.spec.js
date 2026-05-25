@@ -5,15 +5,15 @@ import * as z from 'zod'
 // ---------------------------------------------------------------------------
 // Mocks
 // ---------------------------------------------------------------------------
-const mockExecute = vi.fn()
+const mockMutateAsync = vi.fn()
 beforeEach(() => {
-  mockExecute.mockReset()
-  mockExecute.mockResolvedValue({ id: 'new-001' })
+  mockMutateAsync.mockReset()
+  mockMutateAsync.mockResolvedValue({ id: 'new-001' })
 })
 
 vi.mock('../../../api/composables/use-create-order.js', () => ({
   useCreateOrder: () => ({
-    execute: mockExecute,
+    mutateAsync: mockMutateAsync,
     isPending: { value: false },
     error: { value: null },
   }),
@@ -131,10 +131,10 @@ describe('FormCreateOrder — integration', () => {
   it('rejects empty submission through the component', () => {
     const wrapper = createWrapper()
     wrapper.findComponent({ name: 'UForm' }).vm.onSubmit()
-    expect(mockExecute).not.toHaveBeenCalled()
+    expect(mockMutateAsync).not.toHaveBeenCalled()
   })
 
-  it('calls execute and emits created on valid submission', async () => {
+  it('calls mutateAsync and emits created on valid submission', async () => {
     const wrapper = createWrapper()
 
     const payload = {
@@ -147,14 +147,14 @@ describe('FormCreateOrder — integration', () => {
     const onSubmit = wrapper.vm.$.setupState.onSubmit
     await onSubmit({ data: payload })
 
-    expect(mockExecute).toHaveBeenCalledTimes(1)
-    expect(mockExecute).toHaveBeenCalledWith({ payload })
+    expect(mockMutateAsync).toHaveBeenCalledTimes(1)
+    expect(mockMutateAsync).toHaveBeenCalledWith(payload)
     expect(wrapper.emitted('created')).toBeTruthy()
     expect(wrapper.emitted('created')[0][0]).toEqual(payload)
   })
 
-  it('does not emit created when execute throws', async () => {
-    mockExecute.mockRejectedValueOnce(new Error('API error'))
+  it('does not emit created when mutateAsync throws', async () => {
+    mockMutateAsync.mockRejectedValueOnce(new Error('API error'))
 
     const wrapper = createWrapper()
     const payload = { provider: 'ACME', amount: 1000, currency: 'ARS', concept: 'valid concept' }

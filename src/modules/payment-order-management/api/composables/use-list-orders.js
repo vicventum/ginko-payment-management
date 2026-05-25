@@ -2,7 +2,8 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useFetch } from '@/modules/_core/api/composables/use-fetch.js'
 import { useOrdersStore } from '../../stores/store-orders.js'
-import { fetchOrders } from '../providers/provider-orders.js'
+import { fetchOrders } from '../services/service-orders.js'
+import { fetchOrders as fetchOrdersProvider } from '../providers/provider-orders.js'
 
 export function useListOrders() {
   const store = useOrdersStore()
@@ -14,12 +15,18 @@ export function useListOrders() {
     pagination.value,
   ])
 
-  const queryFn = () => fetchOrders({
-    search: filters.value.search,
-    status: filters.value.status,
-    page: pagination.value.page,
-    perPage: pagination.value.perPage,
+  return useFetch({
+    queryKey,
+    queryFn: async ({ signal }) => {
+      return await fetchOrders(fetchOrdersProvider, {
+        signal,
+        payload: {
+          search: filters.value.search,
+          status: filters.value.status,
+          page: pagination.value.page,
+          perPage: pagination.value.perPage,
+        },
+      })
+    },
   })
-
-  return useFetch({ queryKey, queryFn })
 }
