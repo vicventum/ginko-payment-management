@@ -1,26 +1,26 @@
+<script setup>
+import BCard from '@/modules/_core/components/b/card/b-card.vue'
+import DCardHeader from '@/modules/_core/components/d/card/d-card-header.vue'
+import FormCreateOrder from '@/modules/payment-order-management/components/form/FormCreateOrder.vue'
+
+const emit = defineEmits(['on-created', 'on-cancel'])
+
+function handleCreated(payload) {
+  emit('on-created', payload)
+}
+</script>
+
 <template>
   <div>
     <DCardHeader
       title="Nueva orden de pago"
       subtitle="Completá los datos para crear una nueva orden"
       back
-      @back="$emit('cancel')"
+      @on-back="$emit('on-cancel')"
     />
 
     <BCard>
-      <FormCreateOrder @created="onCreated" @cancel="$emit('cancel')" />
+      <FormCreateOrder @on-created="handleCreated" @on-cancel="$emit('on-cancel')" />
     </BCard>
   </div>
 </template>
-
-<script setup>
-import BCard from '@/modules/_core/components/b/card/b-card.vue'
-import DCardHeader from '@/modules/_core/components/d/card/d-card-header.vue'
-import FormCreateOrder from '@/modules/payment-order-management/components/form/FormCreateOrder.vue'
-
-const emit = defineEmits(['created', 'cancel'])
-
-function onCreated(payload) {
-  emit('created', payload)
-}
-</script>

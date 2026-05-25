@@ -1,27 +1,3 @@
-<template>
-  <div class="mx-auto max-w-3xl px-4 py-8">
-    <section class="mb-8">
-      <SectionOrderDetail
-        ref="detailRef"
-        :order-id="id"
-        @back="onBack"
-        @transition="onTransition"
-      />
-    </section>
-
-    <BModal
-      :open="confirmOpen"
-      :title="confirmTitle"
-      :text="confirmDescription"
-      :confirm-label="confirmLabel"
-      :confirm-color="confirmColor"
-      :loading="transitioning"
-      @update:open="confirmOpen = $event"
-      @confirm="executeTransition"
-    />
-  </div>
-</template>
-
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -69,11 +45,11 @@ const confirmColor = computed(() => {
   return transitionColor(pendingTransition.value.to)
 })
 
-function onBack() {
+function handleBack() {
   router.push({ name: 'payment-order-list' })
 }
 
-function onTransition({ id: orderId, from, to }) {
+function handleTransition({ id: orderId, from, to }) {
   pendingTransition.value = { from, to }
   confirmOpen.value = true
 }
@@ -97,7 +73,7 @@ const { mutateAsync, isPending: transitioning } = useUpdateOrder({
   },
 })
 
-async function executeTransition() {
+async function handleConfirmTransition() {
   if (!pendingTransition.value) return
   const { from, to } = pendingTransition.value
 
@@ -113,3 +89,27 @@ async function executeTransition() {
   }
 }
 </script>
+
+<template>
+  <div class="mx-auto max-w-3xl px-4 py-8">
+    <section class="mb-8">
+      <SectionOrderDetail
+        ref="detailRef"
+        :order-id="id"
+        @on-back="handleBack"
+        @on-transition="handleTransition"
+      />
+    </section>
+
+    <BModal
+      :open="confirmOpen"
+      :title="confirmTitle"
+      :text="confirmDescription"
+      :confirm-label="confirmLabel"
+      :confirm-color="confirmColor"
+      :loading="transitioning"
+      @update:open="confirmOpen = $event"
+      @on-confirm="handleConfirmTransition"
+    />
+  </div>
+</template>

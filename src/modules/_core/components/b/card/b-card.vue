@@ -1,18 +1,3 @@
-<template>
-  <UCard
-    :ui="mergedUi"
-    :variant="variant"
-  >
-    <template v-if="$slots.header" #header>
-      <slot name="header" />
-    </template>
-    <slot />
-    <template v-if="$slots.footer" #footer>
-      <slot name="footer" />
-    </template>
-  </UCard>
-</template>
-
 <script setup>
 import { computed } from 'vue'
 
@@ -27,3 +12,18 @@ const mergedUi = computed(() => ({
   ...props.ui,
 }))
 </script>
+
+<template>
+  <UCard
+    :ui="mergedUi"
+    :variant="variant"
+  >
+    <template v-if="$slots.header" #header>
+      <slot name="header" />
+    </template>
+    <slot />
+    <template v-if="$slots.footer" #footer>
+      <slot name="footer" />
+    </template>
+  </UCard>
+</template>

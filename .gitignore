@@ -9,6 +9,7 @@ dist/
 .idea/
 *.swp
 *.swo
+openspec
 
 # OS
 .DS_Store

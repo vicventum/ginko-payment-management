@@ -1,3 +1,7 @@
+<script setup>
+const state = defineModel({ required: true })
+</script>
+
 <template>
   <div class="space-y-4">
     <UFormField name="provider" label="Proveedor" required>
@@ -29,7 +33,3 @@
     </UFormField>
   </div>
 </template>
-
-<script setup>
-const state = defineModel({ required: true })
-</script>

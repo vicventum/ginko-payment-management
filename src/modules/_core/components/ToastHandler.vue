@@ -1,3 +1,9 @@
+<script setup>
+import { useToastStore } from '@/modules/_core/stores/store-toast.js'
+
+const store = useToastStore()
+</script>
+
 <template>
   <div class="fixed bottom-4 right-4 z-[100] flex w-[calc(100%-2rem)] flex-col gap-2 sm:w-96">
     <TransitionGroup name="toast">
@@ -16,12 +22,6 @@
     </TransitionGroup>
   </div>
 </template>
-
-<script setup>
-import { useToastStore } from '@/modules/_core/stores/store-toast.js'
-
-const store = useToastStore()
-</script>
 
 <style scoped>
 .toast-enter-active {

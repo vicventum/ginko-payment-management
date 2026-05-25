@@ -1,7 +1,21 @@
+<script setup>
+import { formatAmount, formatDate } from '@/modules/_core/utils/format.js'
+import CBadgeStatus from '@/modules/_core/components/c/badge/c-badge-status.vue'
+
+defineProps({
+  order: {
+    type: Object,
+    required: true,
+  },
+})
+
+defineEmits(['on-click'])
+</script>
+
 <template>
   <UCard
     class="cursor-pointer transition hover:bg-muted"
-    @click="$emit('click', order.id)"
+    @click="$emit('on-click', order.id)"
   >
     <div class="flex items-start justify-between gap-4">
       <div class="min-w-0 flex-1">
@@ -25,17 +39,3 @@
     </div>
   </UCard>
 </template>
-
-<script setup>
-import { formatAmount, formatDate } from '@/modules/_core/utils/format.js'
-import CBadgeStatus from '@/modules/_core/components/c/badge/c-badge-status.vue'
-
-defineProps({
-  order: {
-    type: Object,
-    required: true,
-  },
-})
-
-defineEmits(['click'])
-</script>

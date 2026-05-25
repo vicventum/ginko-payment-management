@@ -1,10 +1,36 @@
+<script setup>
+import { computed } from 'vue'
+import { useOrderDetail } from '@/modules/payment-order-management/api/composables/use-order-detail.js'
+import { ORDER_TRANSITIONS } from '@/modules/payment-order-management/domain/state-machine.js'
+import { formatAmount, formatDate } from '@/modules/_core/utils/format.js'
+import { transitionLabel, transitionColor, transitionIcon } from '@/modules/payment-order-management/_shared/order-helpers.js'
+import BCard from '@/modules/_core/components/b/card/b-card.vue'
+import DCardHeader from '@/modules/_core/components/d/card/d-card-header.vue'
+import CBadgeStatus from '@/modules/_core/components/c/badge/c-badge-status.vue'
+
+const props = defineProps({
+  orderId: { type: String, required: true },
+})
+
+defineEmits(['on-back', 'on-transition'])
+
+const { data, isLoading, isError, error, refresh } = useOrderDetail(props.orderId)
+
+defineExpose({ refresh })
+
+const allowedTransitions = computed(() => {
+  if (!data.value) return []
+  return ORDER_TRANSITIONS[data.value.status] ?? []
+})
+</script>
+
 <template>
   <div>
     <DCardHeader
       title="Detalle de orden"
       :subtitle="data?.provider"
       back
-      @back="$emit('back')"
+      @on-back="$emit('on-back')"
     />
 
     <template v-if="isLoading">
@@ -59,7 +85,7 @@
 
       <template #footer>
         <div class="flex items-center gap-2">
-          <UButton icon="i-lucide-arrow-left" label="Volver" color="neutral" variant="outline" @click="$emit('back')" />
+          <UButton icon="i-lucide-arrow-left" label="Volver" color="neutral" variant="outline" @click="$emit('on-back')" />
           <div class="flex-1" />
           <UButton
             v-for="t in allowedTransitions"
@@ -67,36 +93,10 @@
             :label="transitionLabel(t)"
             :color="transitionColor(t)"
             :icon="transitionIcon(t)"
-            @click="$emit('transition', { id: data.id, from: data.status, to: t })"
+            @click="$emit('on-transition', { id: data.id, from: data.status, to: t })"
           />
         </div>
       </template>
     </BCard>
   </div>
 </template>
-
-<script setup>
-import { computed } from 'vue'
-import { useOrderDetail } from '@/modules/payment-order-management/api/composables/use-order-detail.js'
-import { ORDER_TRANSITIONS } from '@/modules/payment-order-management/domain/state-machine.js'
-import { formatAmount, formatDate } from '@/modules/_core/utils/format.js'
-import { transitionLabel, transitionColor, transitionIcon } from '@/modules/payment-order-management/_shared/order-helpers.js'
-import BCard from '@/modules/_core/components/b/card/b-card.vue'
-import DCardHeader from '@/modules/_core/components/d/card/d-card-header.vue'
-import CBadgeStatus from '@/modules/_core/components/c/badge/c-badge-status.vue'
-
-const props = defineProps({
-  orderId: { type: String, required: true },
-})
-
-defineEmits(['back', 'transition'])
-
-const { data, isLoading, isError, error, refresh } = useOrderDetail(props.orderId)
-
-defineExpose({ refresh })
-
-const allowedTransitions = computed(() => {
-  if (!data.value) return []
-  return ORDER_TRANSITIONS[data.value.status] ?? []
-})
-</script>

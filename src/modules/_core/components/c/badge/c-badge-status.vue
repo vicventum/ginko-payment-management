@@ -1,11 +1,3 @@
-<template>
-  <BBadge
-    :value="status"
-    :styles="STATUS_STYLES"
-    :size="size"
-  />
-</template>
-
 <script setup>
 import BBadge from '@/modules/_core/components/b/badge/b-badge.vue'
 
@@ -21,3 +13,11 @@ const STATUS_STYLES = {
   rejected: { color: 'error', label: 'Rechazado' },
 }
 </script>
+
+<template>
+  <BBadge
+    :value="status"
+    :styles="STATUS_STYLES"
+    :size="size"
+  />
+</template>

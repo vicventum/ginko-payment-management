@@ -114,7 +114,7 @@ describe('FormCreateOrder — integration', () => {
     const wrapper = createWrapper()
     const cancelBtn = wrapper.findAllComponents({ name: 'UButton' })[0]
     cancelBtn.vm.$emit('click', new MouseEvent('click'))
-    expect(wrapper.emitted('cancel')).toBeTruthy()
+    expect(wrapper.emitted('on-cancel')).toBeTruthy()
   })
 
   it('rejects empty submission through the component', () => {
@@ -133,13 +133,13 @@ describe('FormCreateOrder — integration', () => {
       concept: 'Monthly service fee',
     }
 
-    const onSubmit = wrapper.vm.$.setupState.onSubmit
-    await onSubmit({ data: payload })
+    const handleSubmit = wrapper.vm.$.setupState.handleSubmit
+    await handleSubmit({ data: payload })
 
     expect(mockMutateAsync).toHaveBeenCalledTimes(1)
     expect(mockMutateAsync).toHaveBeenCalledWith(payload)
-    expect(wrapper.emitted('created')).toBeTruthy()
-    expect(wrapper.emitted('created')[0][0]).toEqual(payload)
+    expect(wrapper.emitted('on-created')).toBeTruthy()
+    expect(wrapper.emitted('on-created')[0][0]).toEqual(payload)
   })
 
   it('does not emit created when mutateAsync throws', async () => {
@@ -147,9 +147,9 @@ describe('FormCreateOrder — integration', () => {
 
     const wrapper = createWrapper()
     const payload = { provider: 'ACME', amount: 1000, currency: 'ARS', concept: 'valid concept' }
-    const onSubmit = wrapper.vm.$.setupState.onSubmit
-    await onSubmit({ data: payload })
+    const handleSubmit = wrapper.vm.$.setupState.handleSubmit
+    await handleSubmit({ data: payload })
 
-    expect(wrapper.emitted('created')).toBeFalsy()
+    expect(wrapper.emitted('on-created')).toBeFalsy()
   })
 })

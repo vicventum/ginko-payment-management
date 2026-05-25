@@ -1,25 +1,10 @@
-<template>
-  <UForm :schema="schema" :state="state" class="space-y-6" @submit="onSubmit">
-    <FieldsOrderForm v-model="state" />
-
-    <div v-if="error" class="rounded-lg bg-error/10 p-3 text-sm text-error">
-      {{ error.message || 'Error al crear la orden' }}
-    </div>
-
-    <div class="flex items-center justify-end gap-3">
-      <UButton label="Cancelar" color="neutral" variant="outline" :disabled="isPending" @click="$emit('cancel')" />
-      <UButton type="submit" label="Crear orden" :loading="isPending" :disabled="isFormInvalid || isPending" icon="i-lucide-plus" />
-    </div>
-  </UForm>
-</template>
-
 <script setup>
 import { reactive, computed } from 'vue'
 import { useCreateOrder } from '@/modules/payment-order-management/api/composables/use-create-order.js'
 import { createOrderSchema } from '@/modules/payment-order-management/schemas/order.schema.js'
 import FieldsOrderForm from '@/modules/payment-order-management/components/fields/FieldsOrderForm.vue'
 
-const emit = defineEmits(['created', 'cancel'])
+const emit = defineEmits(['on-created', 'on-cancel'])
 
 const state = reactive({
   provider: '',
@@ -44,10 +29,10 @@ const isFormInvalid = computed(() => {
   return !result.success
 })
 
-async function onSubmit(event) {
+async function handleSubmit(event) {
   try {
     await mutateAsync(event.data)
-    emit('created', event.data)
+    emit('on-created', event.data)
     state.provider = ''
     state.amount = null
     state.currency = 'ARS'
@@ -57,3 +42,18 @@ async function onSubmit(event) {
   }
 }
 </script>
+
+<template>
+  <UForm :schema="schema" :state="state" class="space-y-6" @submit="handleSubmit">
+    <FieldsOrderForm v-model="state" />
+
+    <div v-if="error" class="rounded-lg bg-error/10 p-3 text-sm text-error">
+      {{ error.message || 'Error al crear la orden' }}
+    </div>
+
+    <div class="flex items-center justify-end gap-3">
+      <UButton label="Cancelar" color="neutral" variant="outline" :disabled="isPending" @click="$emit('on-cancel')" />
+      <UButton type="submit" label="Crear orden" :loading="isPending" :disabled="isFormInvalid || isPending" icon="i-lucide-plus" />
+    </div>
+  </UForm>
+</template>
