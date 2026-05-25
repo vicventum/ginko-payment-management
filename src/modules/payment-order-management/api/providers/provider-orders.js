@@ -3,9 +3,9 @@ import { clientFetch } from '@/modules/_core/api/clients/client-fetch.js'
 const MOCK_PATH = '/mock/orders.json'
 const STORAGE_KEY = 'ginko-orders'
 
-/** @type {import('../../types/api/order.response.js').PaymentOrder[]|null} */
+/** @type {Array|null} */
 let _orders = null
-/** @type {Promise<import('../../types/api/order.response.js').PaymentOrder[]>|null} */
+/** @type {Promise<Array>|null} */
 let _loading = null
 
 // ── Persistencia localStorage ──────────────────────────────────────────
