@@ -25,11 +25,11 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { transitionOrderState } from '../api/services/service-state-machine.js'
-import { ORDER_STATUSES } from '../types/api/order.response.js'
-import { useUpdateOrder } from '../api/composables/use-update-order.js'
-import SectionOrderDetail from '../components/section/SectionOrderDetail.vue'
-import DialogConfirmTransition from '../components/dialog/DialogConfirmTransition.vue'
+import { transitionOrderState } from '@/modules/payment-order-management/api/services/service-state-machine.js'
+import { ORDER_STATUSES } from '@/modules/payment-order-management/types/api/order.response.js'
+import { useUpdateOrder } from '@/modules/payment-order-management/api/composables/use-update-order.js'
+import SectionOrderDetail from '@/modules/payment-order-management/components/section/SectionOrderDetail.vue'
+import DialogConfirmTransition from '@/modules/payment-order-management/components/dialog/DialogConfirmTransition.vue'
 
 const props = defineProps({
   id: { type: String, required: true },

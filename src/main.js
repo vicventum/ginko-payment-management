@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { createRouter, createWebHistory } from 'vue-router'
 import ui from '@nuxt/ui/vue-plugin'
-import App from './App.vue'
+import App from '@/App.vue'
 import { paymentOrderRoutes } from '@/modules/payment-order-management'
 import './assets/css/main.css'
 

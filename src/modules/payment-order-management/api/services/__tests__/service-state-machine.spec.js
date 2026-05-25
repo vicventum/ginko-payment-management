@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   transitionOrderState,
   getAllowedTransitions,
-} from '../service-state-machine.js'
+} from '@/modules/payment-order-management/api/services/service-state-machine.js'
 
 describe('transitionOrderState', () => {
   it('draft -> approved', () => {

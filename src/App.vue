@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import ToastHandler from './modules/_core/components/ToastHandler.vue'
+import ToastHandler from '@/modules/_core/components/ToastHandler.vue'
 </script>
 
 <style>

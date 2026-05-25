@@ -1,4 +1,4 @@
-import { ORDER_STATUSES } from './order.response.js'
+import { ORDER_STATUSES } from '@/modules/payment-order-management/types/api/order.response.js'
 
 /**
  * @typedef {'draft'|'approved'|'paid'|'rejected'} OrderStatus

@@ -1,4 +1,4 @@
-import { useToastStore } from '../stores/store-toast.js'
+import { useToastStore } from '@/modules/_core/stores/store-toast.js'
 
 /**
  * Composable global de toast notification.

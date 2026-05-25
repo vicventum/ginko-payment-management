@@ -11,7 +11,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import SectionOrderList from '../components/section/SectionOrderList.vue'
+import SectionOrderList from '@/modules/payment-order-management/components/section/SectionOrderList.vue'
 
 const router = useRouter()
 

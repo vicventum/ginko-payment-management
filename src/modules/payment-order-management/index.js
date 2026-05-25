@@ -1,5 +1,5 @@
-export { ORDER_STATUSES } from './types/api/order.response.js'
-export { ORDER_STATE_MACHINE } from './types/api/state-machine.response.js'
+export { ORDER_STATUSES } from '@/modules/payment-order-management/types/api/order.response.js'
+export { ORDER_STATE_MACHINE } from '@/modules/payment-order-management/types/api/state-machine.response.js'
 
 export {
   fetchOrders,
@@ -7,17 +7,17 @@ export {
   createOrder,
   updateOrder,
   deleteOrder,
-} from './api/services/service-orders.js'
+} from '@/modules/payment-order-management/api/services/service-orders.js'
 
 export {
   transitionOrderState,
   getAllowedTransitions,
-} from './api/services/service-state-machine.js'
+} from '@/modules/payment-order-management/api/services/service-state-machine.js'
 
-export { useOrdersStore } from './stores/store-orders.js'
+export { useOrdersStore } from '@/modules/payment-order-management/stores/store-orders.js'
 
-export { useListOrders } from './api/composables/use-list-orders.js'
-export { useOrderDetail } from './api/composables/use-order-detail.js'
-export { useCreateOrder } from './api/composables/use-create-order.js'
+export { useListOrders } from '@/modules/payment-order-management/api/composables/use-list-orders.js'
+export { useOrderDetail } from '@/modules/payment-order-management/api/composables/use-order-detail.js'
+export { useCreateOrder } from '@/modules/payment-order-management/api/composables/use-create-order.js'
 
-export { default as paymentOrderRoutes } from './router/index.js'
+export { default as paymentOrderRoutes } from '@/modules/payment-order-management/router/index.js'

@@ -1,9 +1,9 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useFetch } from '@/modules/_core/api/composables/use-fetch.js'
-import { useOrdersStore } from '../../stores/store-orders.js'
-import { fetchOrders } from '../services/service-orders.js'
-import { fetchOrders as fetchOrdersProvider } from '../providers/provider-orders.js'
+import { useOrdersStore } from '@/modules/payment-order-management/stores/store-orders.js'
+import { fetchOrders } from '@/modules/payment-order-management/api/services/service-orders.js'
+import { fetchOrders as fetchOrdersProvider } from '@/modules/payment-order-management/api/providers/provider-orders.js'
 
 export function useListOrders() {
   const store = useOrdersStore()

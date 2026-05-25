@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import FormCreateOrder from '../form/FormCreateOrder.vue'
+import FormCreateOrder from '@/modules/payment-order-management/components/form/FormCreateOrder.vue'
 
 const emit = defineEmits(['created', 'cancel'])
 

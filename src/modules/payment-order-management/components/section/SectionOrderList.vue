@@ -130,10 +130,10 @@
 <script setup>
 import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useListOrders } from '../../api/composables/use-list-orders.js'
-import { useOrdersStore } from '../../stores/store-orders.js'
+import { useListOrders } from '@/modules/payment-order-management/api/composables/use-list-orders.js'
+import { useOrdersStore } from '@/modules/payment-order-management/stores/store-orders.js'
 import { storeToRefs } from 'pinia'
-import CardOrderMobile from '../card/CardOrderMobile.vue'
+import CardOrderMobile from '@/modules/payment-order-management/components/card/CardOrderMobile.vue'
 
 const emit = defineEmits(['view-order', 'create-order'])
 

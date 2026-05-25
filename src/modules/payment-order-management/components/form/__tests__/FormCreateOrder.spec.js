@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import * as z from 'zod'
+import { createOrderSchema } from '@/modules/payment-order-management/schemas/order.schema.js'
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -11,7 +11,7 @@ beforeEach(() => {
   mockMutateAsync.mockResolvedValue({ id: 'new-001' })
 })
 
-vi.mock('../../../api/composables/use-create-order.js', () => ({
+vi.mock('@/modules/payment-order-management/api/composables/use-create-order.js', () => ({
   useCreateOrder: () => ({
     mutateAsync: mockMutateAsync,
     isPending: { value: false },
@@ -19,7 +19,7 @@ vi.mock('../../../api/composables/use-create-order.js', () => ({
   }),
 }))
 
-import FormCreateOrder from '../FormCreateOrder.vue'
+import FormCreateOrder from '@/modules/payment-order-management/components/form/FormCreateOrder.vue'
 
 // ---------------------------------------------------------------------------
 // Stub setup
@@ -64,25 +64,24 @@ function createWrapper() {
 // ---------------------------------------------------------------------------
 describe('FormCreateOrder — validation rules', () => {
   it('rejects empty form', () => {
-    const schema = buildSchema()
-    const result = schema.safeParse({ provider: '', amount: null, currency: 'ARS', concept: '' })
+    const result = createOrderSchema.safeParse({ provider: '', amount: null, currency: 'ARS', concept: '' })
     expect(result.success).toBe(false)
   })
 
   it('rejects empty provider', () => {
-    expect(buildSchema().safeParse({ provider: '', amount: 1500, currency: 'ARS', concept: 'valid' }).success).toBe(false)
+    expect(createOrderSchema.safeParse({ provider: '', amount: 1500, currency: 'ARS', concept: 'valid' }).success).toBe(false)
   })
 
   it('rejects zero amount', () => {
-    expect(buildSchema().safeParse({ provider: 'ACME', amount: 0, currency: 'ARS', concept: 'valid' }).success).toBe(false)
+    expect(createOrderSchema.safeParse({ provider: 'ACME', amount: 0, currency: 'ARS', concept: 'valid' }).success).toBe(false)
   })
 
   it('rejects negative amount', () => {
-    expect(buildSchema().safeParse({ provider: 'ACME', amount: -1, currency: 'ARS', concept: 'valid' }).success).toBe(false)
+    expect(createOrderSchema.safeParse({ provider: 'ACME', amount: -1, currency: 'ARS', concept: 'valid' }).success).toBe(false)
   })
 
   it('rejects string amount', () => {
-    const result = buildSchema().safeParse({ provider: 'ACME', amount: 'abc', currency: 'ARS', concept: 'valid' })
+    const result = createOrderSchema.safeParse({ provider: 'ACME', amount: 'abc', currency: 'ARS', concept: 'valid' })
     expect(result.success).toBe(false)
     if (!result.success) {
       expect(result.error.flatten().fieldErrors.amount).toBeDefined()
@@ -90,27 +89,17 @@ describe('FormCreateOrder — validation rules', () => {
   })
 
   it('rejects empty currency', () => {
-    expect(buildSchema().safeParse({ provider: 'ACME', amount: 100, currency: '', concept: 'valid' }).success).toBe(false)
+    expect(createOrderSchema.safeParse({ provider: 'ACME', amount: 100, currency: '', concept: 'valid' }).success).toBe(false)
   })
 
   it('rejects short concept (< 3 chars)', () => {
-    expect(buildSchema().safeParse({ provider: 'ACME', amount: 100, currency: 'ARS', concept: 'ab' }).success).toBe(false)
+    expect(createOrderSchema.safeParse({ provider: 'ACME', amount: 100, currency: 'ARS', concept: 'ab' }).success).toBe(false)
   })
 
   it('accepts valid payload', () => {
-    expect(buildSchema().safeParse({ provider: 'ACME Corp', amount: 2500.5, currency: 'USD', concept: 'Monthly service' }).success).toBe(true)
+    expect(createOrderSchema.safeParse({ provider: 'ACME Corp', amount: 2500.5, currency: 'USD', concept: 'Monthly service' }).success).toBe(true)
   })
 })
-
-function buildSchema() {
-  return z.object({
-    provider: z.string().min(1, 'El proveedor es obligatorio'),
-    amount: z.number({ invalid_type_error: 'El monto debe ser un número' })
-      .positive('El monto debe ser mayor a 0'),
-    currency: z.string().min(1, 'Seleccioná una moneda'),
-    concept: z.string().min(3, 'El concepto debe tener al menos 3 caracteres'),
-  })
-}
 
 // ---------------------------------------------------------------------------
 // Component integration tests

@@ -1,4 +1,4 @@
-import { ORDER_STATE_MACHINE } from '../../types/api/state-machine.response.js'
+import { ORDER_STATE_MACHINE } from '@/modules/payment-order-management/types/api/state-machine.response.js'
 
 export function transitionOrderState(from, to) {
   if (!ORDER_STATE_MACHINE.canTransition(from, to)) {

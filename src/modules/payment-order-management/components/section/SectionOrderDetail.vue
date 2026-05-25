@@ -80,8 +80,8 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useOrderDetail } from '../../api/composables/use-order-detail.js'
-import { ORDER_STATE_MACHINE } from '../../types/api/state-machine.response.js'
+import { useOrderDetail } from '@/modules/payment-order-management/api/composables/use-order-detail.js'
+import { ORDER_STATE_MACHINE } from '@/modules/payment-order-management/types/api/state-machine.response.js'
 
 const props = defineProps({
   orderId: { type: String, required: true },

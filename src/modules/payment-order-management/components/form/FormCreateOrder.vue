@@ -14,22 +14,12 @@
 </template>
 
 <script setup>
-import * as z from 'zod'
 import { reactive, computed } from 'vue'
-import { useCreateOrder } from '../../api/composables/use-create-order.js'
-import FieldsOrderForm from '../fields/FieldsOrderForm.vue'
+import { useCreateOrder } from '@/modules/payment-order-management/api/composables/use-create-order.js'
+import { createOrderSchema } from '@/modules/payment-order-management/schemas/order.schema.js'
+import FieldsOrderForm from '@/modules/payment-order-management/components/fields/FieldsOrderForm.vue'
 
 const emit = defineEmits(['created', 'cancel'])
-
-const schema = z.object({
-  provider: z.string().min(1, 'El proveedor es obligatorio'),
-  amount: z.number({ invalid_type_error: 'El monto debe ser un número' })
-    .positive('El monto debe ser mayor a 0'),
-  currency: z.string().min(1, 'Seleccioná una moneda'),
-  concept: z.string()
-    .min(3, 'El concepto debe tener al menos 3 caracteres')
-    .max(250, 'El concepto no puede superar los 250 caracteres'),
-})
 
 const state = reactive({
   provider: '',
@@ -37,6 +27,8 @@ const state = reactive({
   currency: 'ARS',
   concept: '',
 })
+
+const schema = createOrderSchema
 
 const { mutateAsync, isPending, error } = useCreateOrder({
   meta: {
