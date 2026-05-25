@@ -2,10 +2,10 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ORDER_TRANSITIONS } from '@/modules/payment-order-management/domain/state-machine.js'
-import { ORDER_STATUSES } from '@/modules/payment-order-management/types/api/order.response.js'
+import { ORDER_STATUSES } from '@/modules/payment-order-management/constants/index.js'
 import { useToast } from '@/modules/_core/utils/toast.js'
 import { useUpdateOrder } from '@/modules/payment-order-management/api/composables/use-update-order.js'
-import { transitionLabel, transitionColor } from '@/modules/payment-order-management/_shared/order-helpers.js'
+import { transitionLabel, transitionColor } from '@/modules/payment-order-management/utils/order.js'
 import BModal from '@/modules/_core/components/b/modal/b-modal.vue'
 import SectionOrderDetail from '@/modules/payment-order-management/components/section/SectionOrderDetail.vue'
 
