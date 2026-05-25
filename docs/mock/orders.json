@@ -1,0 +1,92 @@
+[
+  {
+    "id": "ord-001",
+    "provider": "Proveedor Alpha S.A.",
+    "amount": 1250000,
+    "currency": "COP",
+    "concept": "Servicios de consultoría técnica - Q1 2026",
+    "status": "draft",
+    "createdAt": "2026-04-15T10:30:00.000Z"
+  },
+  {
+    "id": "ord-002",
+    "provider": "Beta Tecnología S.R.L.",
+    "amount": 340000,
+    "currency": "COP",
+    "concept": "Licencias anuales de software",
+    "status": "approved",
+    "createdAt": "2026-04-20T14:00:00.000Z"
+  },
+  {
+    "id": "ord-003",
+    "provider": "Gamma Servicios",
+    "amount": 89000,
+    "currency": "USD",
+    "concept": "Mantenimiento de infraestructura cloud",
+    "status": "paid",
+    "createdAt": "2026-03-10T09:15:00.000Z"
+  },
+  {
+    "id": "ord-004",
+    "provider": "Delta Consulting Group",
+    "amount": 560000,
+    "currency": "COP",
+    "concept": "Auditoría de seguridad informática",
+    "status": "rejected",
+    "createdAt": "2026-05-01T11:45:00.000Z"
+  },
+  {
+    "id": "ord-005",
+    "provider": "Epsilon Networks",
+    "amount": 2100000,
+    "currency": "COP",
+    "concept": "Renovación equipamiento de red",
+    "status": "draft",
+    "createdAt": "2026-05-18T16:20:00.000Z"
+  },
+  {
+    "id": "ord-006",
+    "provider": "Zeta Data Labs",
+    "amount": 75000,
+    "currency": "USD",
+    "concept": "Suscripción anual SaaS - Data Analytics",
+    "status": "approved",
+    "createdAt": "2026-05-10T08:00:00.000Z"
+  },
+  {
+    "id": "ord-007",
+    "provider": "Eta Sistemas S.A.",
+    "amount": 430000,
+    "currency": "COP",
+    "concept": "Desarrollo de módulo CRM",
+    "status": "paid",
+    "createdAt": "2026-02-28T13:30:00.000Z"
+  },
+  {
+    "id": "ord-008",
+    "provider": "Theta Soluciones",
+    "amount": 185000,
+    "currency": "COP",
+    "concept": "Capacitación en ciberseguridad",
+    "status": "draft",
+    "createdAt": "2026-05-22T10:00:00.000Z"
+  },
+  {
+    "id": "ord-009",
+    "provider": "Iota Telecom",
+    "amount": 920000,
+    "currency": "COP",
+    "concept": "Servicio de conectividad dedicada",
+    "status": "approved",
+    "createdAt": "2026-05-15T15:10:00.000Z"
+  },
+  {
+    "id": "ord-010",
+    "provider": "Kappa Cloud Inc.",
+    "amount": 150000,
+    "currency": "USD",
+    "concept": "Infraestructura Kubernetes - 12 meses",
+    "status": "draft",
+    "createdAt": "2026-05-23T09:00:00.000Z"
+  }
+]

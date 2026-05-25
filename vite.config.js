@@ -6,6 +6,9 @@ import { resolve } from 'node:path'
 
 export default defineConfig({
 	base: '/ginko-payment-management/',
+	build: {
+		outDir: 'docs',
+	},
 	plugins: [
 		vue(),
 		tailwindcss(),
