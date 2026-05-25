@@ -9,13 +9,14 @@ const state = defineModel({ required: true })
     </UFormField>
 
     <UFieldGroup>
-      <UFormField name="amount" label="Monto" required class="flex-1">
-        <UInputNumber v-model="state.amount" placeholder="0.00" :min="0" class="w-full" />
-      </UFormField>
-
-      <UFormField name="currency" label="Moneda" required class="w-32">
-        <USelect v-model="state.currency" :items="['ARS', 'USD']" placeholder="Moneda" />
-      </UFormField>
+      <div class="flex gap-2">
+        <UFormField name="amount" label="Monto" required class="w-40">
+          <UInputNumber v-model="state.amount" placeholder="0.00" :min="0" class="w-full" />
+        </UFormField>
+        <UFormField name="currency" label="Moneda" required class="w-32">
+          <USelect v-model="state.currency" :items="['COP', 'USD']" placeholder="Moneda" />
+        </UFormField>
+      </div>
     </UFieldGroup>
 
     <UFormField name="concept" label="Concepto" required>

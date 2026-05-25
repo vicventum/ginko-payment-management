@@ -9,7 +9,7 @@ const emit = defineEmits(['on-created', 'on-cancel'])
 const state = reactive({
   provider: '',
   amount: null,
-  currency: 'ARS',
+  currency: 'COP',
   concept: '',
 })
 
@@ -35,7 +35,7 @@ async function handleSubmit(event) {
     emit('on-created', event.data)
     state.provider = ''
     state.amount = null
-    state.currency = 'ARS'
+    state.currency = 'COP'
     state.concept = ''
   } catch {
     // Error toast ya manejado por useMutation

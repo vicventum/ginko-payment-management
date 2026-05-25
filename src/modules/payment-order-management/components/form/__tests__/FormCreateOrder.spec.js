@@ -64,24 +64,24 @@ function createWrapper() {
 // ---------------------------------------------------------------------------
 describe('FormCreateOrder — validation rules', () => {
   it('rejects empty form', () => {
-    const result = createOrderSchema.safeParse({ provider: '', amount: null, currency: 'ARS', concept: '' })
+    const result = createOrderSchema.safeParse({ provider: '', amount: null, currency: 'COP', concept: '' })
     expect(result.success).toBe(false)
   })
 
   it('rejects empty provider', () => {
-    expect(createOrderSchema.safeParse({ provider: '', amount: 1500, currency: 'ARS', concept: 'valid' }).success).toBe(false)
+    expect(createOrderSchema.safeParse({ provider: '', amount: 1500, currency: 'COP', concept: 'valid' }).success).toBe(false)
   })
 
   it('rejects zero amount', () => {
-    expect(createOrderSchema.safeParse({ provider: 'ACME', amount: 0, currency: 'ARS', concept: 'valid' }).success).toBe(false)
+    expect(createOrderSchema.safeParse({ provider: 'ACME', amount: 0, currency: 'COP', concept: 'valid' }).success).toBe(false)
   })
 
   it('rejects negative amount', () => {
-    expect(createOrderSchema.safeParse({ provider: 'ACME', amount: -1, currency: 'ARS', concept: 'valid' }).success).toBe(false)
+    expect(createOrderSchema.safeParse({ provider: 'ACME', amount: -1, currency: 'COP', concept: 'valid' }).success).toBe(false)
   })
 
   it('rejects string amount', () => {
-    const result = createOrderSchema.safeParse({ provider: 'ACME', amount: 'abc', currency: 'ARS', concept: 'valid' })
+    const result = createOrderSchema.safeParse({ provider: 'ACME', amount: 'abc', currency: 'COP', concept: 'valid' })
     expect(result.success).toBe(false)
     if (!result.success) {
       expect(result.error.flatten().fieldErrors.amount).toBeDefined()
@@ -93,7 +93,7 @@ describe('FormCreateOrder — validation rules', () => {
   })
 
   it('rejects short concept (< 3 chars)', () => {
-    expect(createOrderSchema.safeParse({ provider: 'ACME', amount: 100, currency: 'ARS', concept: 'ab' }).success).toBe(false)
+    expect(createOrderSchema.safeParse({ provider: 'ACME', amount: 100, currency: 'COP', concept: 'ab' }).success).toBe(false)
   })
 
   it('accepts valid payload', () => {
@@ -146,7 +146,7 @@ describe('FormCreateOrder — integration', () => {
     mockMutateAsync.mockRejectedValueOnce(new Error('API error'))
 
     const wrapper = createWrapper()
-    const payload = { provider: 'ACME', amount: 1000, currency: 'ARS', concept: 'valid concept' }
+    const payload = { provider: 'ACME', amount: 1000, currency: 'COP', concept: 'valid concept' }
     const handleSubmit = wrapper.vm.$.setupState.handleSubmit
     await handleSubmit({ data: payload })
 
