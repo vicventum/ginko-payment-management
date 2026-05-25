@@ -133,38 +133,28 @@ Basado en la prioridad y el tiempo limitado, se decidió entregar los siguientes
 - **Arquitectura basada en módulos**: Cada dominio es un módulo bajo `src/modules/`. El módulo de gestión de órdenes de pago está en `src/modules/payment-order-management/`.
 - **Separación de capas API** (inspirada en api-architecture): 
   - Cliente: `src/modules/_core/api/clients/client-fetch.js` (wrapper de fetch nativo).
-  - Proveedor: `src/modules/payment-order-management/api/providers/provider-orders.js` (llamadas HTTP a `/mock/orders.json`).
-  - Tipos: `src/modules/payment-order-management/types/api/*.response.js` (definiciones de PaymentOrder y máquina de estados).
-  - Servicios: `src/modules/payment-order-management/api/services/` (lógica de negocio y wrapper anti-corrupción).
-  - Composables: `src/modules/payment-order-management/api/composables/use-*.js` (encapsulan `useFetch` para datos y mutaciones manuales).
-- **Estado global con Pinia**: Solo se usa para estado UI (filtros, paginación, orden seleccionada). El estado del servidor se maneja mediante `useFetch` (caché, control de carreras, staleTime).
-- **Máquina de estados pura**: Lógica de transiciones aislada en `service-state-machine.js`, 100% testeable y sin dependencias.
-- **Responsividad**: Diseño con Tailwind 4 y Nuxt UI v4, doble render en `SectionOrderList.vue` (tabla ≥lg, grid de tarjetas <lg).
-- **Componentes**: 
-  - Secciones (orquestadores): manejan estado y llaman a composables.
-  - Formulario inteligente: maneja validación y envío.
-  - Campos tontos: solo enlazan modelo y muestran errores.
-  - Tarjeta móvil: presentación individual de una orden.
-  - Diálogo de confirmación: reutilizable para transiciones de estado.
-- **Estilos**: Tailwind 4 para layout y responsividad, Nuxt UI v4 para componentes preconstruidos (tabla, tarjeta, botón, input, modal, esqueleto, etc.).
+  - Proveedor: `src/modules/payment-order-management/api/providers/provider-orders.js` (llamadas HTTP a `/mock/orders.json`, cacheo en memoria y persistencia en localStorage).
+  - Servicios: `src/modules/payment-order-management/api/services/service-orders.js` (capa de paso con inyección de dependencias, preparada para validación Zod futura).
+  - Composables: `src/modules/payment-order-management/api/composables/use-*.js` (encapsulan `useFetch` para consultas y `useMutation` para escritura, con meta para toasts automáticos).
+- **Estado global con Pinia**: Solo se usa para estado UI (filtros, paginación, orden seleccionada). El estado del servidor se maneja mediante `useFetch` (caché en Map, control de carreras con AbortController, staleTime).
+- **Componentes globales (ABCD+L)**: Sistema propio de 5 categorías con prefijos obligatorios — Atom (A), Base (B), Composite (C), Design (D), Layout (L) — que garantiza que la responsabilidad de cada componente sea predecible solo por su nombre. Los componentes core nunca contienen lógica de negocio.
+  - 10 componentes core: ACardInner, BBadge, BCard, BModal, CBadgeStatus, CModalDanger, DActionButtons, DCardHeader, LHeader, LFooter.
+- **Componentes de módulo**: Secciones (orquestadores con datos), Formulario inteligente (validación y envío), Campos tontos (solo enlazan modelo), Tabla responsiva, Tarjeta móvil.
+- **Responsividad**: Diseño con Tailwind 4 y Nuxt UI v4, doble render en `SectionOrderList.vue` (tabla ≥lg, grid de tarjetas <lg). Tres breakpoints: mobile (<640px), tablet (640-1023px), desktop (≥1024px).
+- **Estilos**: Tailwind 4 para layout y responsividad, Nuxt UI v4 para componentes preconstruidos (tabla, tarjeta, botón, input, modal, esqueleto, etc.). Modo oscuro mediante `UColorModeSwitch`.
 - **Pruebas**: 
   - Unidad: máquina de estados (transiciones válidas/invalidas, estados terminales).
-  - Integración: formulario de creación (reglas de validación Zod, comportamiento de envío y emisión de eventos).
-  - Infraestructura: `package.json`, `vitest.config.js` creadas para ejecutar pruebas con `vitest`.
+  - Integración: formulario de creación (13 tests: reglas de validación Zod, comportamiento de envío, emisión de eventos, manejo de errores de API).
+  - Infraestructura: `package.json`, `vitest.config.js` para ejecutar pruebas con `vitest`.
 
 ## Pendientes (no alcanzado por prioridad o tiempo)
-- **Optimistic updates** al transicionar estado (se manejó con estados de carga en el modal pero no se actualizó la UI optimísticamente antes de la respuesta del API).
-- **Atajos de teclado** para acciones frecuentes (por ejemplo, Enter para submit, Escape para cancelar).
-- **Modo oscuro** (se podría agregar mediante clase `dark` de Tailwind y estrategia de preferencia de medios).
-- **Animaciones suaves** en transiciones de estado del listado (por ejemplo, usando transición de Vue o clases de Tailwind).
-- **Exportar a CSV** o impresión de listado.
-- **Editar órdenes en borrador** (solo se implementó creación).
-- **Eliminar órdenes** (se implementó en el provider pero no se expuso en la UI).
-- **Paginación del lado del servidor** (se implementó del lado del cliente por simplicidad).
-- **Endpoint real de API** (se usó mock JSON estático en `/mock/orders.json` que se muta en memoria durante la sesión).
-- **Tests de extremo a extremo** (se hicieron unitarios e integración, pero no E2E con Vitest o Playwright).
-- **Documentación de componentes** con historias de Storybook (no requerida).
-- **Linting y formateo** (ESLint, Prettier) no configurados para mantener foco en funcionalidad.
+- **Optimistic updates** al transicionar estado (no se implementaron por tiempo; además es un patrón que no he practicado recientemente).
+- **Atajos de teclado** para acciones frecuentes (Enter para submit, Escape para cancelar). Nuxt UI lo facilita pero quedaron fuera del alcance.
+- **Editar órdenes en borrador** (solo se implementó creación y transiciones de estado).
+- **Eliminar órdenes** (el provider tiene `deleteOrder` pero no se expuso en la UI).
+- **Paginación del lado del servidor** (se implementó del lado del cliente por simplicidad, ya que los datos mock son estáticos).
+- **Endpoint real de API** (se usó mock JSON estático servido por Vite, con persistencia en localStorage para mutaciones durante la sesión).
+- **Tests de extremo a extremo** (se hicieron unitarios e integración, pero no E2E).
 
 ## Instrucciones para ejecutar
 1. Clonar el repositorio.
@@ -176,7 +166,7 @@ Basado en la prioridad y el tiempo limitado, se decidió entregar los siguientes
 ## Decisión sobre state local vs Pinia
 - **Pinia** se usa exclusivamente para estado que necesita ser compartido entre vistas y persistir durante la navegación: filtros de lista, paginación y la orden actualmente seleccionada (para detalle). Este estado es de UI y no representa datos del servidor.
 - **Estado local** (con `ref` o `defineModel`) se usa en componentes que son autónomos y cuyo estado no necesita ser compartido: campos del formulario temporal, estado de carga de mutaciones internas, estado abierto/cerrado de diálogos modales, etc.
-Esta separación sigue la原则 de `state-management-strategy`: Pinia para estado global de UI, `useFetch` (o mutaciones manuales) para estado del servidor.
+Esta separación sigue la estrategia de `state-management-strategy`: Pinia para estado global de UI, `useFetch` (o `useMutation`) para estado del servidor.
 
 ---
 *PRD generado como parte del proceso de desarrollo dirigido por especificaciones (SDD) para asegurar alineación con requisitos y trazabilidad.*
